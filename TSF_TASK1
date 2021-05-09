@@ -1,0 +1,63 @@
+##IMPORTING LIBRARIES
+
+import pandas as pd 
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+
+##LOADING DATASET
+
+link = "http://bit.ly/w-data"
+data = pd.read_csv(link)
+print(data)
+
+##Now we find correlation before establish linear relation between two variable.
+
+data.corr() 
+# Here we can observe that they both features are positively correlated
+
+plt.title(" Hours studied VS Marks obtained")
+plt.xlabel("Numbers of study hours")
+plt.ylabel("Score Obtained")
+plt.scatter(data.Hours,data.Scores,color='Blue',label='Data Points')
+plt.legend(['Data Points'])
+
+##Training the dataset
+
+LR = linear_model.LinearRegression()
+LR.fit(data[['Hours']],data.Scores)
+
+m = LR.coef_ 
+print(m)
+
+a = LR.intercept_ 
+print(a)
+
+# Now using the equation of linear Regression line which is Y = M*x + A 
+Predicted_Score = data[['Hours']]*m + a
+
+plt.title("Prediction of Hours studied Vs percentage of score using Linear Regression")
+plt.xlabel("Number of study hours") 
+plt.ylabel("score obtained") 
+plt.scatter(data.Hours,data.Scores,color="blue", label = 'Data point') 
+plt.plot(data.Hours,Predicted_Score,color="red", label = 'Linear Regression line')
+plt.legend(['linear Regression line','Data point']) 
+
+##Testing the dataset on the given problem statement
+
+def LR_Prediction(hour):    
+    score = m*hour + a   
+    return score
+    
+##Prediction
+
+Prediction = LR_Prediction(9.25) 
+print("Given that the student studies 9.25 hour/day, the prediction of Score achieved is 92.90")
+
+from sklearn.metrics import mean_absolute_error
+print("Mean of Absolute Error:", mean_absolute_error(data.Scores,Predicted_Score))
+ 
+ 
+##Here We use Mean Absolute Percentage Error for model performance with best fit. i.e Model fit is Excellent if it is < 10 % . Here it is 4.97 % . Hence our model fit is best.
+    
+    
+
